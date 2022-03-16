@@ -4,6 +4,7 @@ Makefile
 Makefile.in
 /aclocal.m4
 /autom4te.cache
+/build/
 /build-aux/
 /config.cache
 /config.guess
@@ -76,3 +77,6 @@ GTAGS
 /.project
 /.settings/
 /.vscode/
+
+/patch/
+/test/

@@ -20,13 +20,12 @@
 
 #include <config.h>
 
-#ifndef HAVE___LXSTAT
-
 #include <sys/stat.h>
 #include <unistd.h>
 #include "libfakechroot.h"
 #include "lstat.h"
 
+#ifndef HAVE___LXSTAT
 
 wrapper(lstat, int, (int ver, const char * filename, struct stat * buf))
 {

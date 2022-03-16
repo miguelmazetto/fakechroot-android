@@ -104,7 +104,7 @@ void fakechroot_init (void)
             write(STDOUT_FILENO, " ", 1) &&
             write(STDOUT_FILENO, VERSION, sizeof(VERSION)-1) &&
             write(STDOUT_FILENO, "\n", 1)) { /* -Wunused-result */ }
-        _Exit(atoi(detect));
+        exit(atoi(detect));
     }
 
     debug("fakechroot_init()");
@@ -140,14 +140,23 @@ void fakechroot_init (void)
 
 
 /* Lazily load function */
+#define NEW
 LOCAL fakechroot_wrapperfn_t fakechroot_loadfunc (struct fakechroot_wrapper * w)
 {
-    char *msg;
-    if (!(w->nextfunc = dlsym(RTLD_NEXT, w->name))) {;
+	char *msg;
+#ifdef OLD
+    if (!(w->nextfunc = dlsym(RTLD_NEXT, w->name))) {
         msg = dlerror();
         fprintf(stderr, "%s: %s: %s\n", PACKAGE, w->name, msg != NULL ? msg : "unresolved symbol");
         exit(EXIT_FAILURE);
     }
+#else
+    if (!(w->nextfunc = dlsym(strcmp(w->name, "dlopen")?RTLD_NEXT : RTLD_DEFAULT, w->name))) {
+        msg = dlerror();
+        fprintf(stderr, "%s: %s: %s\n", PACKAGE, w->name, msg != NULL ? msg : "unresolved symbol");
+        exit(EXIT_FAILURE);
+    }
+#endif
     return w->nextfunc;
 }
 
