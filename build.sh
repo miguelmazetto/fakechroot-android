@@ -30,11 +30,12 @@ export __ANDROID__=1
 
 ./autogen.sh
 
+rm -rf build
 mkdir build
 cd build
 
 ../configure --host aarch64-linux-android
-echo "#define HAVE___LXSTAT 1" >> ../config.h.in
+echo "#define HAVE___LXSTAT" >> ../config.h.in
 
 make -j7
 

@@ -106,6 +106,7 @@ fi
 
 if [ "$?" -ne 0 ]; then
     fakechroot_usage
+    exit 0
 fi
 
 # eval set -- "$fakechroot_opts"
@@ -168,7 +169,7 @@ fi
 if [ -n "$FAKEROOT_ALT_LIB" ]; then
     lib_libfakeroot="$FAKEROOT_ALT_LIB"
 else
-    lib_libfakeroot="libfakeroot-sysv.so"
+    lib_libfakeroot="libfakeroot-0.so"
 fi
 
 for preload in $(echo "$LD_PRELOAD" | tr ':' ' '); do
@@ -185,7 +186,7 @@ done
 
 # Make sure the preload is available
 fakechroot_paths="$fakechroot_paths${LD_LIBRARY_PATH:+${fakechroot_paths:+:}$LD_LIBRARY_PATH}"
-fakechroot_lib="${lib_libfakeroot_to_preload:+${lib_libfakeroot_to_preload}:}$fakechroot_lib${lib_to_preload:+:$lib_to_preload}"
+fakechroot_lib="${lib_libfakeroot_to_preload:+${lib_libfakeroot_to_preload}:}$fakechroot_lib${lib_to_preload:+:$lib_to_preload}:./libfakechroot.so"
 
 fakechroot_detect=`LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" FAKECHROOT_DETECT=1 $fakechroot_echo 2>&1`
 case "$fakechroot_detect" in
@@ -241,7 +242,7 @@ fakechroot_cmd=${fakechroot_cmd_wrapper:-$1}
 
 # Execute command
 if [ -z "$*" ]; then
-    LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" ${SHELL:-/bin/sh}
+    LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" ${SHELL:-/system/bin/sh}
     exit $?
 else
     if [ -n "$fakechroot_cmd" ]; then
