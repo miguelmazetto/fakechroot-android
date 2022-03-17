@@ -92,27 +92,25 @@ fi
 
 
 # Get options
-fakechroot_getopttest=`getopt --version`
-case $fakechroot_getopttest in
-    getopt*)
-        # GNU getopt
-        fakechroot_opts=`getopt -q -l lib: -l elfloader: -l use-system-libs -l config-dir: -l environment: -l bindir: -l version -l help -- +l:d:sc:e:b:vh "$@"`
-        ;;
-    *)
-        # POSIX getopt ?
-        fakechroot_opts=`getopt l:d:sc:e:b:vh "$@"`
-        ;;
-esac
+# fakechroot_getopttest=`getopt --version`
+# case $fakechroot_getopttest in
+#     getopt*)
+#         # GNU getopt
+#         fakechroot_opts=`getopt -q -l lib: -l elfloader: -l use-system-libs -l config-dir: -l environment: -l bindir: -l version -l help -- +l:d:sc:e:b:vh "$@"`
+#         ;;
+#     *)
+#         # POSIX getopt ?
+#         fakechroot_opts=`getopt l:d:sc:e:b:vh "$@"`
+#         ;;
+# esac
 
 if [ "$?" -ne 0 ]; then
     fakechroot_usage
 fi
 
-eval set -- "$fakechroot_opts"
+# eval set -- "$fakechroot_opts"
 
-while [ $# -gt 0 ]; do
-    fakechroot_opt=$1
-    shift
+while getopts "l:d:sc:e:b:vh" fakechroot_opt; do
     case "$fakechroot_opt" in
         -h|--help)
             fakechroot_usage
@@ -122,35 +120,31 @@ while [ $# -gt 0 ]; do
             exit 0
             ;;
         -l|--lib)
-            fakechroot_lib=`eval echo "$1"`
+            fakechroot_lib=`eval echo "${OPTARG}"`
             fakechroot_paths=
-            shift
             ;;
         -d|--elfloader)
-            FAKECHROOT_ELFLOADER=$1
+            FAKECHROOT_ELFLOADER=${OPTARG}
             export FAKECHROOT_ELFLOADER
-            shift
             ;;
         -s|--use-system-libs)
             fakechroot_paths="${fakechroot_paths:+$fakechroot_paths:}/usr/lib:/lib"
             ;;
         -c|--config-dir)
-            fakechroot_confdir=$1
-            shift
+            fakechroot_confdir=${OPTARG}
             ;;
         -e|--environment)
-            fakechroot_environment=$1
-            shift
+            fakechroot_environment=${OPTARG}
             ;;
         -b|--bindir)
-            fakechroot_bindir=$1
-            shift
+            fakechroot_bindir=${OPTARG}
             ;;
         --)
             break
             ;;
     esac
 done
+shift $((OPTIND-1))
 
 if [ -z "$fakechroot_environment" ]; then
     fakechroot_next_cmd "$@"

@@ -27,7 +27,7 @@ do_subst = $(SED) -e 's,[@]bindir[@],$(bindir),g' \
                -e 's,[@]MKFIFO[@],$(MKFIFO),g' \
                -e 's,[@]PERL[@],$(PERL),g' \
                -e 's,[@]SEQ[@],$(SEQ),g' \
-               -e 's,[@]SHELL[@],$(SHELL),g' \
+               -e 's,[@]SHELL[@],/system/bin/sh,g' \
                -e 's,[@]SYSTEMCTL[@],$(SYSTEMCTL),g' \
                -e 's,[@]VERSION[@],$(VERSION),g'
 

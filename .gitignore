@@ -80,3 +80,26 @@ GTAGS
 
 /patch/
 /test/
+
+/fakeroot/Makefile.in
+/fakeroot/aclocal.m4
+/fakeroot/autom4te.cache/
+/fakeroot/build-aux/
+/fakeroot/config.guess
+/fakeroot/config.h.in
+/fakeroot/config.h.in~
+/fakeroot/config.sub
+/fakeroot/configure
+/fakeroot/depcomp
+/fakeroot/doc/es/faked.1
+/fakeroot/doc/es/fakeroot.1
+/fakeroot/doc/fr/faked.1
+/fakeroot/doc/fr/fakeroot.1
+/fakeroot/doc/nl/faked.1
+/fakeroot/doc/nl/fakeroot.1
+/fakeroot/doc/sv/faked.1
+/fakeroot/doc/sv/fakeroot.1
+/fakeroot/install-sh
+/fakeroot/ltmain.sh
+/fakeroot/missing
+/fakeroot/build/
