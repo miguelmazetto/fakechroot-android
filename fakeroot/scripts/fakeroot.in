@@ -1,4 +1,4 @@
-#!@SHELL@
+#!/system/bin/sh
 
 # This script first starts faked (the daemon), and then it will run
 # the requested program with fake root privileges.
@@ -43,18 +43,13 @@ export FAKED_MODE
 
 libfound=no
 
-GETOPTTEST=`getopt -T`
-if test "$?" -eq 4; then # GNU getopt
-    FAKE_TEMP=`getopt -l lib: -l faked: -l unknown-is-real -l fd-base: -l version -l help -- +l:f:i:s:ub:vh "$@"`
-else
-    FAKE_TEMP=`getopt l:f:i:s:ub:vh "$@"`
-fi
+#FAKE_TEMP=`getopts l:f:i:s:ub:vh "$@"`
 
 if test "$?" -ne 0; then
   usage
 fi
 
-eval set -- "$FAKE_TEMP"
+#eval set -- "$FAKE_TEMP"
 
 FAKEDOPTS=""
 PIPEIN=""
@@ -168,8 +163,8 @@ fi
 export FAKEROOT_FD_BASE
 
 if test -z "$*"; then
-  @MACOSX_FALSE@FAKEROOTKEY=$FAKEROOTKEY @LDLIBPATHVAR@="$PATHS" @LDEXTRAVAR@ @LDPRELOADVAR@="$FAKEROOT_LIB" ${SHELL:-/bin/sh}
-  @MACOSX_TRUE@FAKEROOTKEY=$FAKEROOTKEY @LDEXTRAVAR@ @LDPRELOADVAR@="$FAKEROOT_LIB" ${SHELL:-/bin/sh}
+  @MACOSX_FALSE@FAKEROOTKEY=$FAKEROOTKEY @LDLIBPATHVAR@="$PATHS" @LDEXTRAVAR@ @LDPRELOADVAR@="$FAKEROOT_LIB" /system/bin/sh
+  @MACOSX_TRUE@FAKEROOTKEY=$FAKEROOTKEY @LDEXTRAVAR@ @LDPRELOADVAR@="$FAKEROOT_LIB" /system/bin/sh
   RESULT=$?
 else
   @MACOSX_FALSE@FAKEROOTKEY=$FAKEROOTKEY @LDLIBPATHVAR@="$PATHS" @LDEXTRAVAR@ @LDPRELOADVAR@="$FAKEROOT_LIB" "$@"

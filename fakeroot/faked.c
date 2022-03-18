@@ -1429,7 +1429,7 @@ int main(int argc, char **argv){
 
   sd = socket(PF_INET, SOCK_STREAM, 0);
   if (sd < 0)
-    fail("socket");
+    fail("socket2");
 
   val = 1;
   if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof (val)) < 0)

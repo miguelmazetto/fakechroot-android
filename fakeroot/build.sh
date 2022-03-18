@@ -30,6 +30,7 @@ export __ANDROID__=1
 
 export SHELL="/system/bin/sh"
 
+rm -rf build
 ./bootstrap
 mkdir build
 cd build

@@ -476,7 +476,7 @@ static void open_comm_sd(void)
 
   comm_sd = socket(PF_INET, SOCK_STREAM, 0);
   if (comm_sd < 0)
-    fail("socket");
+    fail("socket1");
 
   if (fcntl(comm_sd, F_SETFD, FD_CLOEXEC) < 0)
     fail("fcntl(F_SETFD, FD_CLOEXEC)");

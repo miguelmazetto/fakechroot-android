@@ -109,43 +109,52 @@ if [ "$?" -ne 0 ]; then
     exit 0
 fi
 
-# eval set -- "$fakechroot_opts"
-
-while getopts "l:d:sc:e:b:vh" fakechroot_opt; do
-    case "$fakechroot_opt" in
+while test "X$1" != "X--"; do
+    case "$1" in
         -h|--help)
             fakechroot_usage
+            exit 0
+            break
             ;;
         -v|--version)
             echo "fakechroot version $FAKECHROOT_VERSION"
             exit 0
+            break
             ;;
         -l|--lib)
-            fakechroot_lib=`eval echo "${OPTARG}"`
+            shift
+            fakechroot_lib=`eval echo "$1"`
             fakechroot_paths=
             ;;
         -d|--elfloader)
-            FAKECHROOT_ELFLOADER=${OPTARG}
+            shift
+            FAKECHROOT_ELFLOADER=$1
             export FAKECHROOT_ELFLOADER
             ;;
         -s|--use-system-libs)
             fakechroot_paths="${fakechroot_paths:+$fakechroot_paths:}/usr/lib:/lib"
             ;;
         -c|--config-dir)
-            fakechroot_confdir=${OPTARG}
+            shift
+            fakechroot_confdir=$1
             ;;
         -e|--environment)
-            fakechroot_environment=${OPTARG}
+            shift
+            fakechroot_environment=$1
             ;;
         -b|--bindir)
-            fakechroot_bindir=${OPTARG}
+            shift
+            fakechroot_bindir=$1
             ;;
         --)
+            shift
             break
             ;;
     esac
+    if [ test "X$1" != "X--" ]; then
+        shift
+    fi
 done
-shift $((OPTIND-1))
 
 if [ -z "$fakechroot_environment" ]; then
     fakechroot_next_cmd "$@"
@@ -169,7 +178,7 @@ fi
 if [ -n "$FAKEROOT_ALT_LIB" ]; then
     lib_libfakeroot="$FAKEROOT_ALT_LIB"
 else
-    lib_libfakeroot="libfakeroot-0.so"
+    lib_libfakeroot="libfakeroot.so"
 fi
 
 for preload in $(echo "$LD_PRELOAD" | tr ':' ' '); do
@@ -242,16 +251,19 @@ fakechroot_cmd=${fakechroot_cmd_wrapper:-$1}
 
 # Execute command
 if [ -z "$*" ]; then
-    LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" ${SHELL:-/system/bin/sh}
+    echo '"$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" /system/bin/sh'
+    LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" /system/bin/sh
     exit $?
 else
     if [ -n "$fakechroot_cmd" ]; then
         # Call substituted command
         shift
+        echo 'LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" "$fakechroot_cmd" "$@"'
         LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" "$fakechroot_cmd" "$@"
         exit $?
     else
         # Call original command
+        echo 'LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" "$@"'
         LD_LIBRARY_PATH="$fakechroot_paths" LD_PRELOAD="$fakechroot_lib" "$@"
         exit $?
     fi
