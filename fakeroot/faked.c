@@ -619,6 +619,7 @@ int save_database(const uint32_t remote)
               (uint64_t) i->buf.mode,(uint64_t) i->buf.uid,(uint64_t) i->buf.gid,
               (uint64_t) i->buf.nlink,(uint64_t) i->buf.rdev,path);
 #else
+    typedef unsigned long long uint64_t;
     fprintf(f,"dev=%llx,ino=%llu,mode=%llo,uid=%llu,gid=%llu,nlink=%llu,rdev=%llu\n",
             (uint64_t) i->buf.dev,(uint64_t) i->buf.ino,(uint64_t) i->buf.mode,
             (uint64_t) i->buf.uid,(uint64_t) i->buf.gid,(uint64_t) i->buf.nlink,

@@ -32,8 +32,8 @@
 # define htonll(n)  (n)
 # define ntohll(n)  (n)
 #elif __BYTE_ORDER == __LITTLE_ENDIAN
-# define htonll(n)  ((((uint64_t) htonl(n)) << 32LL) | htonl((n) >> 32LL))
-# define ntohll(n)  ((((uint64_t) ntohl(n)) << 32LL) | ntohl((n) >> 32LL))
+# define htonll(n)  ((((unsigned long long) htonl(n)) << 32LL) | htonl((n) >> 32LL))
+# define ntohll(n)  ((((unsigned long long) ntohl(n)) << 32LL) | ntohl((n) >> 32LL))
 #endif
 #endif /* !defined(sun) && !defined(_NETINET_IN_H) */
 
@@ -41,8 +41,8 @@
 
 typedef uint32_t func_id_t;
 
-typedef uint64_t fake_ino_t;
-typedef uint64_t fake_dev_t;
+typedef unsigned long long fake_ino_t;
+typedef unsigned long long fake_dev_t;
 typedef uint32_t fake_uid_t;
 typedef uint32_t fake_gid_t;
 typedef uint32_t fake_mode_t;

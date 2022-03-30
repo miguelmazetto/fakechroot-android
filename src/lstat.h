@@ -26,10 +26,11 @@
 
 #ifndef HAVE___LXSTAT
 
-wrapper_proto(lstat, int, (int, const char *, struct stat *));
-
-#endif
+//wrapper_proto(lstat, int, (int, const char *, struct stat *));
+wrapper_proto(lstat, int, (const char *, struct stat *));
 
 int lstat_rel(const char *, struct stat *);
+
+#endif
 
 #endif
