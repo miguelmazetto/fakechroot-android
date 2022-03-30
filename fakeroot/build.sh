@@ -28,14 +28,17 @@ export STRIP=$TOOLCHAIN/bin/llvm-strip
 
 export __ANDROID__=1
 
-./autogen.sh
+export SHELL="/system/bin/sh"
 
 rm -rf build
+./bootstrap
 mkdir build
 cd build
 
-../configure --host aarch64-linux-android
-echo "#define HAVE___LXSTAT" >> ../config.h.in
+../configure --host aarch64-linux-android --with-ipc=tcp
+echo "#define _ID_T
+#define SEND_GET_XATTR(a,b,c) send_get_xattr(a,b)
+#define SEND_GET_XATTR64(a,b,c) send_get_xattr64(a,b)" >> ../config.h.in
 
 make -j7
 

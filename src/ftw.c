@@ -22,6 +22,9 @@
 # include <config.h>
 #endif
 
+#undef HAVE_FTW
+#undef HAVE_FTW64
+
 #if ((!defined(__FTW64_C) && HAVE_FTW) || (defined(__FTW64_C) && HAVE_FTW64)) \
  && !defined(OPENDIR_CALLS___OPEN) && !defined(OPENDIR_CALLS___OPENDIR2) && !defined(HAVE__XFTW)
 
@@ -65,6 +68,7 @@ char *alloca ();
 
 #include <errno.h>
 #include <fcntl.h>
+#include <ftw.h>
 #include "ftw2.h"
 #include <limits.h>
 #include <search.h>
@@ -102,6 +106,11 @@ char *alloca ();
 
 #if HAVE_SYS_PARAM_H || defined _LIBC
 # include <sys/param.h>
+#endif
+#ifdef _LIBC
+# include <include/sys/stat.h>
+#else
+# include <sys/stat.h>
 #endif
 
 #include "libfakechroot.h"
@@ -856,11 +865,9 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   return result;
 }
 
+
+
 /* Entry points.  */
-
-#pragma message "FTW_NAME: " macro_stringify(FTW_NAME) " - "  FTW_NAME_STRING
-
-__BEGIN_DECLS
 
 int
 FTW_NAME (path, func, descriptors)
@@ -868,13 +875,12 @@ FTW_NAME (path, func, descriptors)
      FTW_FUNC_T func;
      int descriptors;
 {
-  debug("FTW" "(\"%s\", &func, %d)", path, descriptors);
+  debug(FTW_NAME_STRING "(\"%s\", &func, %d)", path, descriptors);
   return ftw_startup (path, 0, func, descriptors, 0);
 }
 
 #if ((!defined(__FTW64_C) && HAVE_NFTW) || (defined(__FTW64_C) && HAVE_NFTW64))
 #ifndef _LIBC
-#pragma message "NFTW_NAME: " macro_stringify(NFTW_NAME) " - " NFTW_NAME_STRING
 int
 NFTW_NAME (path, func, descriptors, flags)
      const char *path;
@@ -933,8 +939,6 @@ compat_symbol (libc, NFTW_OLD_NAME, NFTW_NAME, GLIBC_2_1);
 # endif
 #endif
 #endif
-
-__END_DECLS
 
 #else
 typedef int empty_translation_unit;

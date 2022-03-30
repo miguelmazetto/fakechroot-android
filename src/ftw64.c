@@ -18,8 +18,6 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sys/stat.h>
-
 #define __FTW64_C
 #define FTW_NAME ftw64
 #define NFTW_NAME nftw64
@@ -33,14 +31,4 @@
 #define FTW_FUNC_T __ftw64_func_t
 #define NFTW_FUNC_T __nftw64_func_t
 
-#define __USE_LARGEFILE64
-
 #include "ftw.c"
-
-//__BEGIN_DECLS
-//int ftw(const char* __dir_path, int (*__callback)(const char*, const struct stat*, int), int __max_fd_count){return 0;}
-//int nftw(const char* __dir_path, int (*__callback)(const char*, const struct stat*, int, struct FTW*), int __max_fd_count, int __flags){return 0;}
-//__END_DECLS
-
-#pragma message "AFT64: " macro_stringify(ftw)
-#pragma message "AFT64N: " macro_stringify(nftw)

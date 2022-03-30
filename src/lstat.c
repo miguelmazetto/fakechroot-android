@@ -19,19 +19,16 @@
 
 
 #include <config.h>
-
-#ifndef HAVE___LXSTAT
-
-#include <sys/stat.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "libfakechroot.h"
 #include "lstat.h"
 
-//wrapper(lstat, int, (int ver, const char * filename, struct stat * buf))
-wrapper(lstat, int, (const char * filename, struct stat * buf))
+#ifndef HAVE___LXSTAT
+
+wrapper(lstat, int, (int ver, const char * filename, struct stat * buf))
 {
-    //debug("lstat(%d, \"%s\", &buf)", ver, filename);
-    debug("lstat(\"%s\", &buf)", filename);
+    debug("lstat(%d, \"%s\", &buf)", ver, filename);
 
     if (!fakechroot_localdir(filename)) {
         if (filename != NULL) {
@@ -41,11 +38,13 @@ wrapper(lstat, int, (const char * filename, struct stat * buf))
         }
     }
 
-    return lstat_rel(/*ver,*/ filename, buf);
+    return lstat_rel(ver, filename, buf);
 }
 
+#else
+
 /* Prevent looping with realpath() */
-LOCAL int lstat_rel(const char * file_name, struct stat * buf)
+int lstat_rel(const char * file_name, struct stat * buf)
 {
     char fakechroot_abspath[FAKECHROOT_PATH_MAX];
     char fakechroot_buf[FAKECHROOT_PATH_MAX];
@@ -58,7 +57,7 @@ LOCAL int lstat_rel(const char * file_name, struct stat * buf)
     debug("lstat_rel(\"%s\", &buf)", file_name);
     orig = file_name;
     expand_chroot_rel_path(file_name);
-    retval = nextcall(lstat)(file_name, buf);
+    retval = lstat(file_name, buf);
     /* deal with http://bugs.debian.org/561991 */
     if ((buf->st_mode & S_IFMT) == S_IFLNK)
         if ((status = readlink(orig, tmp, sizeof(tmp)-1)) != -1)
@@ -66,6 +65,5 @@ LOCAL int lstat_rel(const char * file_name, struct stat * buf)
     return retval;
 }
 
-#else
 typedef int empty_translation_unit;
 #endif

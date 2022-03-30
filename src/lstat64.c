@@ -32,6 +32,7 @@
 
 #include "libfakechroot.h"
 
+
 wrapper(lstat64, int, (const char * file_name, struct stat64 * buf))
 {
     char fakechroot_abspath[FAKECHROOT_PATH_MAX];
