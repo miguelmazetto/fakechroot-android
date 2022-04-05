@@ -24,12 +24,12 @@
 #include <config.h>
 #include "libfakechroot.h"
 
-#ifndef HAVE___LXSTAT
+#if !defined(HAVE___LXSTAT) || NEW_GLIBC
 
-wrapper_proto(lstat, int, (int, const char *, struct stat *));
-
-#endif
+wrapper_proto(lstat, int, (const char *, struct stat *));
 
 int lstat_rel(const char *, struct stat *);
+
+#endif
 
 #endif

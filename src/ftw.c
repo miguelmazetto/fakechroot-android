@@ -22,9 +22,6 @@
 # include <config.h>
 #endif
 
-#undef HAVE_FTW
-#undef HAVE_FTW64
-
 #if ((!defined(__FTW64_C) && HAVE_FTW) || (defined(__FTW64_C) && HAVE_FTW64)) \
  && !defined(OPENDIR_CALLS___OPEN) && !defined(OPENDIR_CALLS___OPENDIR2) && !defined(HAVE__XFTW)
 
@@ -68,7 +65,6 @@ char *alloca ();
 
 #include <errno.h>
 #include <fcntl.h>
-#include <ftw.h>
 #include "ftw2.h"
 #include <limits.h>
 #include <search.h>
@@ -189,7 +185,7 @@ int rpl_lstat (const char *, struct stat *);
 # define NFTW_NEW_NAME __new_nftw
 # define INO_T ino_t
 # define STAT stat
-# ifdef _LIBC
+# if defined(_LIBC) && !NEW_GLIBC
 #  define LXSTAT __lxstat
 #  define XSTAT __xstat
 #  define FXSTATAT __fxstatat

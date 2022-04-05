@@ -103,3 +103,5 @@ GTAGS
 /fakeroot/ltmain.sh
 /fakeroot/missing
 /fakeroot/build/
+
+/jniLibs/

@@ -62,7 +62,7 @@ AC_PATH_PROG([SHELL], [bash dash sh], [/bin/sh], [/bin:/usr/bin:/usr/sbin:/sbin:
 AC_PATH_PROG([SYSTEMCTL], [systemctl], [/sbin/systemctl], [/sbin:/usr/sbin:/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:$PATH])
 
 # Additional C macros
-AC_DEFINE([FAKECHROOT], [PACKAGE_VERSION], [FAKECHROOT])
+AC_DEFINE([FAKECHROOT], [PACKAGE_VERSION], [FAKECHROOT], [NEW_GLIBC]) #mmz: Android
 AC_DEFINE_UNQUOTED([BIN_LS], ["$ac_cv_path_LS"], [BIN_LS])
 AC_DEFINE_UNQUOTED([BIN_SH], ["$ac_cv_path_SH"], [BIN_SH])
 
@@ -198,6 +198,8 @@ AC_CHECK_FUNCS(m4_normalize([
     freopen64
     fstat
     fstat64
+    fstatat
+    fstatat64
     fts_children
     fts_open
     fts_read
