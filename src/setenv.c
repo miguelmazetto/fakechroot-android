@@ -43,7 +43,7 @@
    modified for uClibc by Erik Andersen <andersen@codepoet.org>
 */
 
-#include <features.h>
+#include "features.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>

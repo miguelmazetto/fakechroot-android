@@ -65,6 +65,7 @@ char *alloca ();
 
 #include <errno.h>
 #include <fcntl.h>
+#include "features.h"
 #include "ftw2.h"
 #include <limits.h>
 #include <search.h>

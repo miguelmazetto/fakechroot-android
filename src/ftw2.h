@@ -23,11 +23,9 @@
 #ifndef _FTW2_H
 #define	_FTW2_H	1
 
-#include <features.h>
-
+#include "features.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <ftw.h>
 
 __BEGIN_DECLS
@@ -41,19 +39,22 @@ __BEGIN_DECLS
 #define FTW_SKIP_SUBTREE 2
 #define FTW_SKIP_SIBLINGS 3
 
-
 /* Convenient types for callback functions.  */
-typedef int (*__ftw_func_t) (__const char *__filename,
-                             __const struct stat *__status, int __flag);
-typedef int (*__nftw_func_t) (__const char *__filename,
-                              __const struct stat *__status, int __flag,
-                              struct FTW *__info);
-#ifdef __FTW64_C
-typedef int (*__ftw64_func_t) (__const char *__filename,
-                               __const struct stat64 *__status, int __flag);
-typedef int (*__nftw64_func_t) (__const char *__filename,
-                                __const struct stat64 *__status,
-                                int __flag, struct FTW *__info);
+typedef int (*__ftw_func_t) (const char *__filename,
+           const struct stat *__status, int __flag);
+#ifdef __USE_LARGEFILE64
+typedef int (*__ftw64_func_t) (const char *__filename,
+             const struct stat64 *__status, int __flag);
+#endif
+#ifdef __USE_XOPEN_EXTENDED
+typedef int (*__nftw_func_t) (const char *__filename,
+            const struct stat *__status, int __flag,
+            struct FTW *__info);
+# ifdef __USE_LARGEFILE64
+typedef int (*__nftw64_func_t) (const char *__filename,
+        const struct stat64 *__status,
+        int __flag, struct FTW *__info);
+# endif
 #endif
 
 __END_DECLS

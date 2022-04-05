@@ -11,7 +11,7 @@ rm -rf $SDIR/jniLibs
 mkdir $SDIR/jniLibs
 
 configure_android(){
-	export CFLAGS="-I$ANDROID_USR/include -mglobal-merge" # -fPIE
+	export CFLAGS="-I$ANDROID_USR/include" # -fPIE
 	export LDFLAGS="-R$ANDROID_USR/lib/$TARGET/$API -L$ANDROID_USR/lib/$TARGET/$API"
 	export AR=$TOOLCHAIN/bin/llvm-ar
 	export CC=$TOOLCHAIN/bin/$TARGET$API-clang
@@ -63,18 +63,7 @@ configure_chroot(){
 	cd $SDIR/build
 	$SDIR/configure --host $TARGET _LIBC=1
 
-#	echo "#if defined (__aarch64__)
-#	#define _STAT_VER 0
-##elif defined (__x86_64__)
-#	#define _STAT_VER 1
-##else
-#	#define _STAT_VER 3
-##endif" >> $SDIR/config.h.in
-
-	#if [[ $IS32BIT -gt 0 ]]
-	#then
-	#	echo "k" #echo "#define HAVE___XSTAT64" >> $SDIR/config.h.in
-	#fi
+	echo "#define __BIONIC_LP32_USE_STAT64" >> $SDIR/config.h.in
 }
 
 # Parallel configure :D
@@ -84,14 +73,14 @@ configure_all(){
 	yellow=$(tput setaf 185)
 	purple=$(tput setaf 147)
 	configure_chroot 2>&1 | sed "s/.*/$yellow&$defaultcol/" &
-	#configure_fakeroot 2>&1 | sed "s/.*/$purple&$defaultcol/" &
+	configure_fakeroot 2>&1 | sed "s/.*/$purple&$defaultcol/" &
 	wait
 }
 
 compile_chroot(){
 	printf "\n${greencol}Compiling FakeChroot for $TARGET...\n\n${defaultcol}"
 	cd $SDIR/build
-	make -j  #EXTRA_CFLAGS="-fcommon"
+	make -j
 
 	printf "\n${greencol}Compiling getopt for $TARGET...\n\n${defaultcol}"
 	
@@ -114,17 +103,17 @@ compile_fakeroot(){
 
 doall(){
 	configure_all
-	#compile_fakeroot
+	compile_fakeroot
 	compile_chroot
 }
 
-#export TARGET=aarch64-linux-android
-#JNIOUT=arm64-v8a
-#doall
-#
-#export TARGET=x86_64-linux-android
-#JNIOUT=x86_64
-#doall
+export TARGET=aarch64-linux-android
+JNIOUT=arm64-v8a
+doall
+
+export TARGET=x86_64-linux-android
+JNIOUT=x86_64
+doall
 
 IS32BIT=1
 export TARGET=armv7a-linux-androideabi
