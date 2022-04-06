@@ -73,8 +73,8 @@ unset CDPATH
 
 # Default settings
 fakechroot_lib=libfakechroot.so
-fakechroot_paths=@libpath@
-fakechroot_sysconfdir=@sysconfdir@
+fakechroot_paths=${POCKETPC_LIBS}
+fakechroot_sysconfdir=${POCKETPC_DIR}/etc/fakechroot
 fakechroot_confdir=
 fakechroot_environment=
 fakechroot_bindir=

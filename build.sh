@@ -82,29 +82,29 @@ compile_chroot(){
 	cd $SDIR/build
 	make -j
 
-	printf "\n${greencol}Compiling getopt for $TARGET...\n\n${defaultcol}"
-	
-	$CC $SDIR/src/getopt.c -DTEST -o $SDIR/build/getopt
-
-	cp $SDIR/build/getopt $JNIOUTDIR/libgetopt.so
 	cp $SDIR/build/src/.libs/libfakechroot.so $JNIOUTDIR/libfakechroot.so
 }
 
 compile_fakeroot(){
 	printf "\n${greencol}Compiling Fakeroot for $TARGET...\n\n${defaultcol}"
-
 	cd $SDIR/fakeroot/build
-
 	make -j
 
 	cp faked $JNIOUTDIR/libfaked.so
 	cp .libs/libfakeroot-0.so $JNIOUTDIR/libfakeroot.so
 }
 
+compile_getopt(){
+	printf "\n${greencol}Compiling getopt for $TARGET...\n\n${defaultcol}"
+	$CC $SDIR/getopt/getopt.c -o $SDIR/build/getopt
+	cp $SDIR/build/getopt $JNIOUTDIR/libgetopt.so
+}
+
 doall(){
 	configure_all
 	compile_fakeroot
 	compile_chroot
+	compile_getopt
 }
 
 export TARGET=aarch64-linux-android
