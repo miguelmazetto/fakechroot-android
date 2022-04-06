@@ -63,7 +63,9 @@ configure_chroot(){
 	cd $SDIR/build
 	$SDIR/configure --host $TARGET _LIBC=1
 
-	echo "#define __BIONIC_LP32_USE_STAT64" >> $SDIR/config.h.in
+	echo "#define __BIONIC_LP32_USE_STAT64
+#define NEW_GLIBC 1" >> $SDIR/config.h.in
+
 }
 
 # Parallel configure :D
@@ -77,7 +79,7 @@ configure_all(){
 	wait
 }
 
-compile_chroot(){
+compile_fakechroot(){
 	printf "\n${greencol}Compiling FakeChroot for $TARGET...\n\n${defaultcol}"
 	cd $SDIR/build
 	make -j
@@ -94,6 +96,12 @@ compile_fakeroot(){
 	cp .libs/libfakeroot-0.so $JNIOUTDIR/libfakeroot.so
 }
 
+compile_chroot(){
+	printf "\n${greencol}Compiling chroot for $TARGET...\n\n${defaultcol}"
+	$CC $SDIR/chroot/chroot.c -o $SDIR/build/chroot
+	cp $SDIR/build/chroot $JNIOUTDIR/libchroot.so
+}
+
 compile_getopt(){
 	printf "\n${greencol}Compiling getopt for $TARGET...\n\n${defaultcol}"
 	$CC $SDIR/getopt/getopt.c -o $SDIR/build/getopt
@@ -103,6 +111,7 @@ compile_getopt(){
 doall(){
 	configure_all
 	compile_fakeroot
+	compile_fakechroot
 	compile_chroot
 	compile_getopt
 }
