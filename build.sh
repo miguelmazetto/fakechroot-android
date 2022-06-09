@@ -39,7 +39,8 @@ configure_fakeroot(){
 
 	echo "#define _ID_T
 #define SEND_GET_XATTR(a,b,c) send_get_xattr(a,b)
-#define SEND_GET_XATTR64(a,b,c) send_get_xattr64(a,b)" >> $FDIR/config.h.in
+#define SEND_GET_XATTR64(a,b,c) send_get_xattr64(a,b)
+#define LIBFAKEROOT_DEBUGGING" >> $FDIR/config.h.in
 
 	mkdir $FDIR/build
 	cd $FDIR/build

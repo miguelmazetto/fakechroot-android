@@ -140,23 +140,14 @@ void fakechroot_init (void)
 
 
 /* Lazily load function */
-#define NEW
 LOCAL fakechroot_wrapperfn_t fakechroot_loadfunc (struct fakechroot_wrapper * w)
 {
-	char *msg;
-#ifdef OLD
+    char *msg;
     if (!(w->nextfunc = dlsym(RTLD_NEXT, w->name))) {
         msg = dlerror();
         fprintf(stderr, "%s: %s: %s\n", PACKAGE, w->name, msg != NULL ? msg : "unresolved symbol");
         exit(EXIT_FAILURE);
     }
-#else
-    if (!(w->nextfunc = dlsym(strcmp(w->name, "dlopen")?RTLD_NEXT : RTLD_DEFAULT, w->name))) {
-        msg = dlerror();
-        fprintf(stderr, "%s: %s: %s\n", PACKAGE, w->name, msg != NULL ? msg : "unresolved symbol");
-        exit(EXIT_FAILURE);
-    }
-#endif
     return w->nextfunc;
 }
 
