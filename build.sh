@@ -2,8 +2,7 @@
 
 SDIR=$PWD
 
-export NDK_TOOLCHAIN=/home/mmz/dev/ndk
-export TOOLCHAIN=$NDK_TOOLCHAIN/toolchains/llvm/prebuilt/linux-x86_64
+export TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 export ANDROID_USR=$TOOLCHAIN/sysroot/usr
 export API=24 # Set this to your minSdkVersion.
 
