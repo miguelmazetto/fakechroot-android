@@ -1,13 +1,13 @@
 #!/bin/bash
 
 SDIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
+RDIR=$SDIR
+if [[ ! -z "$MMZ_ROOTFOLDER" ]]; then RDIR=$MMZ_ROOTFOLDER; fi
+cd $SDIR
 
 export TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 export ANDROID_USR=$TOOLCHAIN/sysroot/usr
 export API=24 # Set this to your minSdkVersion.
-
-RDIR=SDIR
-if [[ ! -z "$MMZ_ROOTFOLDER" ]]; then RDIR=$MMZ_ROOTFOLDER fi
 
 configure_android(){
 	export CFLAGS="-I$ANDROID_USR/include" # -fPIE
@@ -28,9 +28,9 @@ defaultcol=$(tput sgr0)
 
 configure_fakechroot(){
 	printf "\n${greencol}Configuring fakechroot for $TARGET...\n\n${defaultcol}"
-	cd $SDIR; rm -rf build;	mkdir build; cd build
+	cd $SDIR; mkdir -p build/$ARCH2; cd build/$ARCH2
 
-	../configure --host $TARGET _LIBC=1
+	../../configure --host $TARGET _LIBC=1
 	echo "#define __BIONIC_LP32_USE_STAT64
 #define NEW_GLIBC 1" >> $SDIR/config.h.in
 }
@@ -38,7 +38,7 @@ configure_fakechroot(){
 compile_fakechroot(){
 	printf "\n${greencol}Compiling fakechroot for $TARGET...\n\n${defaultcol}"
 	make -j
-	cp $SDIR/build/src/.libs/libfakechroot.so $JNIOUTDIR/libfakechroot.so
+	cp src/.libs/libfakechroot.so $JNIOUTDIR/libfakechroot.so
 }
 
 doall(){
@@ -47,16 +47,17 @@ doall(){
 	compile_fakechroot
 }
 
-cd $SDIR; ./autogen.sh
+rm -rf build
+./autogen.sh
 
 export TARGET=aarch64-linux-android
-JNIOUT=arm64-v8a
+ARCH2=arm64-v8a
 doall
 
 export TARGET=x86_64-linux-android
-JNIOUT=x86_64
+ARCH2=x86_64
 doall
 
 export TARGET=armv7a-linux-androideabi
-JNIOUT=armeabi-v7a
+ARCH2=armeabi-v7a
 doall
